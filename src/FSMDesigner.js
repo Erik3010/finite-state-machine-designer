@@ -1,4 +1,5 @@
 import Node from "./Node";
+import Line from "./Line";
 import { random, randomColor } from "./Utility";
 
 class FSMDesigner {
@@ -46,16 +47,45 @@ class FSMDesigner {
     if (!object) return;
 
     this.isMouseDown = true;
+    if (event.shiftKey && object.constructor.name === "Node") {
+      this.placeholderLine = this.createLine({
+        sourceNode: object,
+        targetNode: { x, y },
+      });
+      return;
+    }
+
     this.selectedObject = object;
   }
   handleMouseMove(event) {
-    if (!this.isMouseDown || !this.selectedObject) return;
+    if (!this.isMouseDown) return;
 
     const { offsetX: x, offsetY: y } = event;
+
+    if (this.placeholderLine) {
+      this.placeholderLine.targetNode = { x, y };
+      return;
+    }
+
+    if (!this.selectedObject) return;
     this.selectedObject.movePosition({ x, y });
   }
   handleMouseUp(event) {
+    const { offsetX: x, offsetY: y } = event;
+
     // need to check if target in node
+    if (this.placeholderLine) {
+      const object = this.getObjectByCoordinate({ x, y });
+      if (object && object.constructor.name === "Node") {
+        const line = this.createLine({
+          sourceNode: this.placeholderLine.sourceNode,
+          targetNode: object,
+        });
+        this.objects[line.hitColor] = line;
+      }
+      this.placeholderLine = null;
+    }
+
     this.selectedObject = null;
     this.isMouseDown = false;
   }
@@ -64,9 +94,14 @@ class FSMDesigner {
     const object = this.getObjectByCoordinate({ x, y });
     if (object) return;
 
-    this.createNode({ x, y });
+    const node = this.createNode({ x, y });
+    this.objects[node.hitColor] = node;
   }
   draw() {
+    if (this.placeholderLine) {
+      this.placeholderLine.draw();
+    }
+
     for (const key in this.objects) {
       this.objects[key].draw();
     }
@@ -96,7 +131,19 @@ class FSMDesigner {
       hitCtx: this.hitCanvasCtx,
       hitColor: color,
     });
-    this.objects[color] = node;
+    return node;
+  }
+  createLine({ sourceNode, targetNode }) {
+    const color = this.hitDetectionColor;
+
+    const line = new Line({
+      sourceNode,
+      targetNode,
+      ctx: this.ctx,
+      hitCtx: this.hitCanvasCtx,
+      hitColor: color,
+    });
+    return line;
   }
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
