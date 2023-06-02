@@ -51,6 +51,8 @@ class FSMDesigner {
     }
   }
   render() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     this.draw();
 
     setTimeout(this.render.bind(this), 10);
