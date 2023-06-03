@@ -19,6 +19,8 @@ class Node {
       ctx.fillStyle = this.hitColor;
       ctx.fill();
     } else {
+      // ctx.fillStyle = "#fff";
+      // ctx.fill();
       ctx.stroke();
     }
     ctx.closePath();
