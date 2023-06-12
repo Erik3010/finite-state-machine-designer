@@ -1,5 +1,12 @@
 class Line {
-  constructor({ ctx, hitCtx, hitColor, sourceNode, targetNode }) {
+  constructor({
+    ctx,
+    hitCtx,
+    hitColor,
+    sourceNode,
+    targetNode,
+    isPlaceholderLine = false,
+  }) {
     this.ctx = ctx;
 
     this.sourceNode = sourceNode;
@@ -10,6 +17,7 @@ class Line {
 
     // normal line or loop line
     this.type = "line";
+    this.isPlaceholderLine = isPlaceholderLine;
 
     this.arrowHeadLength = 10;
   }

@@ -51,6 +51,7 @@ class FSMDesigner {
       this.placeholderLine = this.createLine({
         sourceNode: object,
         targetNode: { x, y },
+        isPlaceholderLine: true,
       });
       return;
     }
@@ -133,12 +134,13 @@ class FSMDesigner {
     });
     return node;
   }
-  createLine({ sourceNode, targetNode }) {
+  createLine({ sourceNode, targetNode, isPlaceholderLine = false }) {
     const color = this.hitDetectionColor;
 
     const line = new Line({
       sourceNode,
       targetNode,
+      isPlaceholderLine,
       ctx: this.ctx,
       hitCtx: this.hitCanvasCtx,
       hitColor: color,
