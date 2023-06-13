@@ -33,7 +33,9 @@ class Line {
   get angle() {
     return Math.atan2(this.delta.y, this.delta.x);
   }
-  drawArrowHead(start) {
+  drawArrowHead(start, isDrawHit = false) {
+    const ctx = isDrawHit ? this.hitCtx : this.ctx;
+
     const end = {
       x: this.targetNode.x - Math.cos(this.angle) * this.lineOffset,
       y: this.targetNode.y - Math.sin(this.angle) * this.lineOffset,
@@ -44,14 +46,23 @@ class Line {
       y: end.y - start.y,
     };
 
-    this.ctx.beginPath();
-    this.ctx.moveTo(start.x + 0.5 * delta.y, start.y - 0.5 * delta.x);
-    this.ctx.lineTo(start.x - 0.5 * delta.y, start.y + 0.5 * delta.x);
-    this.ctx.lineTo(end.x, end.y);
-    this.ctx.closePath();
-    this.ctx.fill();
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(start.x + 0.5 * delta.y, start.y - 0.5 * delta.x);
+    ctx.lineTo(start.x - 0.5 * delta.y, start.y + 0.5 * delta.x);
+    ctx.lineTo(end.x, end.y);
+    ctx.closePath();
+    ctx.fillStyle = isDrawHit
+      ? this.hitColor
+      : this.isSelected
+      ? "#ff0000"
+      : "#000000";
+    ctx.fill();
+    ctx.restore();
   }
   drawLine(isDrawHit = false) {
+    const ctx = isDrawHit ? this.hitCtx : this.ctx;
+
     const start = {
       x: this.sourceNode.x + Math.cos(this.angle) * this.lineOffset,
       y: this.sourceNode.y + Math.sin(this.angle) * this.lineOffset,
@@ -66,18 +77,25 @@ class Line {
         Math.sin(this.angle) * (this.arrowHeadLength + this.lineOffset),
     };
 
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.moveTo(start.x, start.y);
-    this.ctx.lineTo(end.x, end.y);
-    this.ctx.stroke();
-    this.ctx.closePath();
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(start.x, start.y);
+    ctx.lineTo(end.x, end.y);
+    if (isDrawHit) ctx.lineWidth = 15;
+    ctx.strokeStyle = isDrawHit
+      ? this.hitColor
+      : this.isSelected
+      ? "#ff0000"
+      : "#000000";
+    ctx.stroke();
+    ctx.closePath();
+    ctx.restore();
 
-    this.drawArrowHead(end);
-    this.ctx.restore();
+    this.drawArrowHead(end, isDrawHit);
   }
   draw() {
     this.drawLine();
+    this.drawLine(true);
   }
 }
 

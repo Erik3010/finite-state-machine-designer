@@ -49,9 +49,7 @@ class FSMDesigner {
 
     this.isMouseDown = true;
 
-    if (object.constructor.name === "Node") {
-      object.isSelected = true;
-    }
+    object.isSelected = true;
 
     if (event.shiftKey && object.constructor.name === "Node") {
       this.placeholderLine = this.createLine({
@@ -74,7 +72,12 @@ class FSMDesigner {
       return;
     }
 
-    if (!this.currentObject) return;
+    if (
+      !this.currentObject ||
+      !(this.currentObject.constructor.name === "Node")
+    )
+      return;
+
     this.currentObject.movePosition({ x, y });
   }
   handleMouseUp(event) {
