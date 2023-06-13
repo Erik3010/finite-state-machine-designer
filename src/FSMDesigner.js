@@ -17,7 +17,7 @@ class FSMDesigner {
     this.placeholderLine = null;
 
     this.isMouseDown = false;
-    this.selectedObject = null;
+    this.currentObject = null;
 
     this.initHitCanvas();
   }
@@ -44,9 +44,15 @@ class FSMDesigner {
     const { offsetX: x, offsetY: y } = event;
     const object = this.getObjectByCoordinate({ x, y });
 
+    this.selectedObject && (this.selectedObject.isSelected = false);
     if (!object) return;
 
     this.isMouseDown = true;
+
+    if (object.constructor.name === "Node") {
+      object.isSelected = true;
+    }
+
     if (event.shiftKey && object.constructor.name === "Node") {
       this.placeholderLine = this.createLine({
         sourceNode: object,
@@ -56,7 +62,7 @@ class FSMDesigner {
       return;
     }
 
-    this.selectedObject = object;
+    this.currentObject = object;
   }
   handleMouseMove(event) {
     if (!this.isMouseDown) return;
@@ -68,8 +74,8 @@ class FSMDesigner {
       return;
     }
 
-    if (!this.selectedObject) return;
-    this.selectedObject.movePosition({ x, y });
+    if (!this.currentObject) return;
+    this.currentObject.movePosition({ x, y });
   }
   handleMouseUp(event) {
     const { offsetX: x, offsetY: y } = event;
@@ -88,7 +94,7 @@ class FSMDesigner {
       this.placeholderLine = null;
     }
 
-    this.selectedObject = null;
+    this.currentObject = null;
     this.isMouseDown = false;
   }
   handleDoubleClick(event) {
@@ -107,6 +113,9 @@ class FSMDesigner {
     for (const key in this.objects) {
       this.objects[key].draw();
     }
+  }
+  get selectedObject() {
+    return Object.values(this.objects).find((obj) => obj.isSelected);
   }
   get hitDetectionColor() {
     let color;

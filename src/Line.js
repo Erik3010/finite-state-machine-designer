@@ -22,6 +22,7 @@ class Line {
 
     this.arrowHeadLength = 15;
     this.lineOffset = lineOffset;
+    this.isSelected = false;
   }
   get delta() {
     return {
@@ -65,6 +66,7 @@ class Line {
         Math.sin(this.angle) * (this.arrowHeadLength + this.lineOffset),
     };
 
+    this.ctx.save();
     this.ctx.beginPath();
     this.ctx.moveTo(start.x, start.y);
     this.ctx.lineTo(end.x, end.y);
@@ -72,6 +74,7 @@ class Line {
     this.ctx.closePath();
 
     this.drawArrowHead(end);
+    this.ctx.restore();
   }
   draw() {
     this.drawLine();

@@ -7,23 +7,27 @@ class Node {
 
     this.x = x;
     this.y = y;
+    this.isSelected = false;
 
     this.radius = 40;
   }
   drawNode(isDrawHit = false) {
     const ctx = isDrawHit ? this.hitCtx : this.ctx;
 
+    ctx.save();
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
     if (isDrawHit) {
       ctx.fillStyle = this.hitColor;
       ctx.fill();
     } else {
+      ctx.strokeStyle = this.isSelected ? "#ff0000" : "#000000";
       // ctx.fillStyle = "#fff";
       // ctx.fill();
       ctx.stroke();
     }
     ctx.closePath();
+    ctx.restore();
   }
   movePosition(newPosition) {
     const { x, y } = {
