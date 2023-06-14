@@ -1,6 +1,6 @@
 import Node from "./Node";
 import Line from "./Line";
-import { random, randomColor } from "./Utility";
+import { randomColor } from "./Utility";
 
 class FSMDesigner {
   constructor({ canvas }) {
@@ -37,6 +37,28 @@ class FSMDesigner {
     this.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
     this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
     this.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this));
+
+    window.addEventListener("keydown", this.handleKeyDown.bind(this));
+  }
+  handleKeyDown(event) {
+    const { keyCode } = event;
+
+    if (!this.selectedObject || this.selectedObject.constructor.name !== "Node")
+      return;
+
+    const { text } = this.selectedObject.text;
+
+    // is alphabet
+    if (
+      (keyCode > 64 && keyCode < 91) ||
+      (keyCode > 96 && keyCode < 123) ||
+      (keyCode > 47 && keyCode < 58) ||
+      keyCode === 32
+    ) {
+      this.selectedObject.text.setText(`${text}${event.key}`);
+    } else if (event.key === "Backspace") {
+      this.selectedObject.text.setText(text.substring(0, text.length - 1));
+    }
   }
   handleMouseDown(event) {
     // need to check is node clicked
@@ -48,7 +70,6 @@ class FSMDesigner {
     if (!object) return;
 
     this.isMouseDown = true;
-
     object.isSelected = true;
 
     if (event.shiftKey && object.constructor.name === "Node") {

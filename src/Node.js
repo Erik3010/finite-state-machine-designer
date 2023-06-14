@@ -15,7 +15,7 @@ class Node {
       ctx: this.ctx,
       x: this.x,
       y: this.y,
-      text: "halo",
+      text: "",
     });
 
     this.radius = 40;
@@ -54,6 +54,7 @@ class Node {
     this.drawNode(true);
 
     this.text.draw();
+    this.text.isCaretActive = this.isSelected;
   }
 }
 
