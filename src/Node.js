@@ -1,3 +1,5 @@
+import Text from "./Text";
+
 class Node {
   constructor({ ctx, hitCtx, hitColor, x, y }) {
     this.ctx = ctx;
@@ -8,6 +10,13 @@ class Node {
     this.x = x;
     this.y = y;
     this.isSelected = false;
+
+    this.text = new Text({
+      ctx: this.ctx,
+      x: this.x,
+      y: this.y,
+      text: "halo",
+    });
 
     this.radius = 40;
   }
@@ -36,10 +45,15 @@ class Node {
     };
     this.x += x;
     this.y += y;
+
+    this.text.x = this.x;
+    this.text.y = this.y;
   }
   draw() {
     this.drawNode();
     this.drawNode(true);
+
+    this.text.draw();
   }
 }
 
