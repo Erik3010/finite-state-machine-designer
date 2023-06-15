@@ -1,3 +1,5 @@
+import { measureText } from "./Utility";
+
 class Text {
   constructor({ ctx, x, y, text, fontSize = 18 }) {
     this.ctx = ctx;
@@ -27,7 +29,11 @@ class Text {
     this.ctx.font = `${this.fontSize}px ${this.fontFamily}`;
   }
   get textProps() {
-    return this.ctx.measureText(this.text);
+    return measureText(this.ctx, {
+      fontSize: this.fontSize,
+      fontFamily: this.fontFamily,
+      text: this.text,
+    });
   }
   draw() {
     this.ctx.save();
@@ -35,6 +41,7 @@ class Text {
     const { width } = this.textProps;
     this.ctx.textBaseline = "middle";
     this.ctx.fillText(this.text, this.x - width / 2, this.y);
+    // this.ctx.fillText(this.text, this.x, this.y);
     this.ctx.restore();
 
     this.isCaretActive && this.drawCaret();

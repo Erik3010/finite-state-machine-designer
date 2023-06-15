@@ -1,3 +1,6 @@
+import Text from "./Text";
+import { measureText } from "./Utility";
+
 class Line {
   constructor({
     ctx,
@@ -23,11 +26,49 @@ class Line {
     this.arrowHeadLength = 15;
     this.lineOffset = lineOffset;
     this.isSelected = false;
+
+    this.initialText = "";
+
+    const { x, y } = this.textPosition;
+    this.text = new Text({ x, y, ctx: this.ctx, text: this.initialText });
   }
   get delta() {
     return {
       x: this.targetNode.x - this.sourceNode.x,
       y: this.targetNode.y - this.sourceNode.y,
+    };
+  }
+  /**
+   * Make text position in the middle of line but didn't overlap with the line itself
+   * Highly inspired from https://github.com/evanw/fsm
+   */
+  get textPosition() {
+    const start = {
+      x: this.sourceNode.x + Math.cos(this.angle) * this.lineOffset,
+      y: this.sourceNode.y + Math.sin(this.angle) * this.lineOffset,
+    };
+
+    const end = {
+      x: this.targetNode.x - Math.cos(this.angle) * this.lineOffset,
+      y: this.targetNode.y - Math.sin(this.angle) * this.lineOffset,
+    };
+
+    const { width } = measureText(this.ctx, {
+      text: this.text?.text ?? this.initialText,
+    });
+    const angle = Math.atan2(end.x - start.x, start.y - end.y);
+
+    const cos = Math.cos(angle + Math.PI);
+    const sin = Math.sin(angle + Math.PI);
+    const cornerPointX = (width / 2 + 5) * Math.sign(cos);
+    const cornerPointY = 15 * Math.sign(sin);
+    const slide =
+      sin * Math.pow(Math.abs(sin), 40) * cornerPointX -
+      cos * Math.pow(Math.abs(cos), 10) * cornerPointY;
+
+    return {
+      x: (start.x + end.x) / 2 + (cornerPointX - sin * slide),
+      y: (start.y + end.y) / 2 + (cornerPointY + cos * slide),
     };
   }
   get angle() {
@@ -41,10 +82,7 @@ class Line {
       y: this.targetNode.y - Math.sin(this.angle) * this.lineOffset,
     };
 
-    const delta = {
-      x: end.x - start.x,
-      y: end.y - start.y,
-    };
+    const delta = { x: end.x - start.x, y: end.y - start.y };
 
     ctx.save();
     ctx.beginPath();
@@ -96,6 +134,21 @@ class Line {
   draw() {
     this.drawLine();
     this.drawLine(true);
+
+    const { x, y } = this.textPosition;
+
+    // this.ctx.save();
+    // this.ctx.beginPath();
+    // this.ctx.arc(x, y, 10, 0, 2 * Math.PI);
+    // this.ctx.fillStyle = "#ff0000";
+    // this.ctx.fill();
+    // this.ctx.closePath();
+    // this.ctx.restore();
+
+    this.text.draw();
+    this.text.x = x;
+    this.text.y = y;
+    this.text.isCaretActive = this.isSelected;
   }
 }
 

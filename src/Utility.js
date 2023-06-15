@@ -9,3 +9,15 @@ export const randomColor = () => {
 
   return `rgb(${color.r}, ${color.g}, ${color.b})`;
 };
+
+export const measureText = (
+  ctx,
+  { fontSize = 18, fontFamily = "Arial", text }
+) => {
+  ctx.save();
+  ctx.font = `${fontSize}px ${fontFamily}`;
+  const props = ctx.measureText(text);
+  ctx.restore();
+
+  return props;
+};

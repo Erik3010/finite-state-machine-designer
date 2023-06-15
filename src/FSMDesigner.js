@@ -43,8 +43,8 @@ class FSMDesigner {
   handleKeyDown(event) {
     const { keyCode } = event;
 
-    if (!this.selectedObject || this.selectedObject.constructor.name !== "Node")
-      return;
+    // if (!this.selectedObject || this.selectedObject.constructor.name !== "Node")
+    if (!this.selectedObject) return;
 
     const { text } = this.selectedObject.text;
 
