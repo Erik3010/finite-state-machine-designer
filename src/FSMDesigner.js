@@ -107,7 +107,11 @@ class FSMDesigner {
     // need to check if target in node
     if (this.placeholderLine) {
       const object = this.getObjectByCoordinate({ x, y });
-      if (object && object.constructor.name === "Node") {
+      if (
+        object &&
+        object.constructor.name === "Node" &&
+        object !== this.selectedObject
+      ) {
         const line = this.createLine({
           sourceNode: this.placeholderLine.sourceNode,
           targetNode: object,
