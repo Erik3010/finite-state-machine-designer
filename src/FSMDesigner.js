@@ -1,5 +1,6 @@
 import Node from "./Node";
 import Line from "./Line";
+import LoopLine from "./LoopLine";
 import { randomColor } from "./Utility";
 
 class FSMDesigner {
@@ -17,7 +18,7 @@ class FSMDesigner {
     this.placeholderLine = null;
 
     this.isMouseDown = false;
-    this.currentObject = null;
+    this.draggedObject = null;
 
     this.initHitCanvas();
   }
@@ -73,6 +74,10 @@ class FSMDesigner {
     object.isSelected = true;
 
     if (event.shiftKey && object.constructor.name === "Node") {
+      // this.placeholderLine = this.createLoopLine({
+      //   node: object,
+      //   cursorCoordinate: { x, y },
+      // });
       this.placeholderLine = this.createLine({
         sourceNode: object,
         targetNode: { x, y },
@@ -81,7 +86,7 @@ class FSMDesigner {
       return;
     }
 
-    this.currentObject = object;
+    this.draggedObject = object;
   }
   handleMouseMove(event) {
     if (!this.isMouseDown) return;
@@ -94,12 +99,12 @@ class FSMDesigner {
     }
 
     if (
-      !this.currentObject ||
-      !(this.currentObject.constructor.name === "Node")
+      !this.draggedObject ||
+      !(this.draggedObject.constructor.name === "Node")
     )
       return;
 
-    this.currentObject.movePosition({ x, y });
+    this.draggedObject.movePosition({ x, y });
   }
   handleMouseUp(event) {
     const { offsetX: x, offsetY: y } = event;
@@ -122,7 +127,7 @@ class FSMDesigner {
       this.placeholderLine = null;
     }
 
-    this.currentObject = null;
+    this.draggedObject = null;
     this.isMouseDown = false;
   }
   handleDoubleClick(event) {
@@ -190,6 +195,25 @@ class FSMDesigner {
       hitColor: color,
     });
     return line;
+  }
+  createLoopLine({ node, cursorCoordinate }) {
+    const delta = {
+      x: cursorCoordinate.x - node.x,
+      y: cursorCoordinate.y - node.y,
+    };
+    console.log(cursorCoordinate, node.x, node.y);
+    const angle = Math.atan2(delta.y, delta.x);
+
+    const color = this.hitDetectionColor;
+    const loopLine = new LoopLine({
+      angle,
+      ctx: this.ctx,
+      hitCtx: this.hitCanvasCtx,
+      hitColor: color,
+      node: node,
+    });
+
+    return loopLine;
   }
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

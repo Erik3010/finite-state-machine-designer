@@ -137,14 +137,6 @@ class Line {
 
     const { x, y } = this.textPosition;
 
-    // this.ctx.save();
-    // this.ctx.beginPath();
-    // this.ctx.arc(x, y, 10, 0, 2 * Math.PI);
-    // this.ctx.fillStyle = "#ff0000";
-    // this.ctx.fill();
-    // this.ctx.closePath();
-    // this.ctx.restore();
-
     this.text.draw();
     this.text.x = x;
     this.text.y = y;
