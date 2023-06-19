@@ -1,4 +1,5 @@
 import { radianToDegree } from "./Utility";
+import Text from "./Text";
 
 class LoopLine {
   constructor({ ctx, hitCtx, hitColor, node, angle }) {
@@ -15,6 +16,20 @@ class LoopLine {
     this.radius = 25;
 
     this.isSelected = false;
+
+    this.initialText = "test";
+
+    const { x, y } = this.textPosition;
+    this.text = new Text({ x, y, ctx: this.ctx, text: this.initialText });
+  }
+  get textPosition() {
+    const x = Math.cos(this.angle) * (this.node.radius + this.radius / 2 + 40);
+    const y = Math.sin(this.angle) * (this.node.radius + this.radius / 2 + 40);
+
+    return {
+      x: this.node.x + x,
+      y: this.node.y + y,
+    };
   }
   drawArrow(isDrawHit = false) {
     const ctx = isDrawHit ? this.hitCtx : this.ctx;
@@ -60,6 +75,7 @@ class LoopLine {
     const x = Math.cos(this.angle) * (this.node.radius + this.radius / 2);
     const y = Math.sin(this.angle) * (this.node.radius + this.radius / 2);
 
+    ctx.save();
     ctx.beginPath();
     ctx.arc(
       this.node.x + x,
@@ -76,12 +92,26 @@ class LoopLine {
       : "#000";
     ctx.stroke();
     ctx.closePath();
+    ctx.restore();
 
     this.drawArrow(isDrawHit);
   }
   draw() {
     this.drawLoopLine();
     this.drawLoopLine(true);
+
+    this.text.draw();
+
+    this.text.isCaretActive = this.isSelected;
+    const { x, y } = this.textPosition;
+    this.text.x = x;
+    this.text.y = y;
+
+    // this.ctx.save();
+    // this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
+    // this.ctx.fillStyle = "#ff0000";
+    // this.ctx.fill();
+    // this.ctx.restore();
   }
 }
 

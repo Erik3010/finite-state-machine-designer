@@ -38,10 +38,6 @@ class Line {
       y: this.targetNode.y - this.sourceNode.y,
     };
   }
-  /**
-   * Make text position in the middle of line but didn't overlap with the line itself
-   * Highly inspired from https://github.com/evanw/fsm
-   */
   get textPosition() {
     const start = {
       x: this.sourceNode.x + Math.cos(this.angle) * this.lineOffset,
@@ -53,6 +49,10 @@ class Line {
       y: this.targetNode.y - Math.sin(this.angle) * this.lineOffset,
     };
 
+    /**
+     * Make text position in the middle of line but didn't overlap with the line itself
+     * Highly inspired from https://github.com/evanw/fsm
+     */
     const { width } = measureText(this.ctx, {
       text: this.text?.text ?? this.initialText,
     });
