@@ -1,7 +1,7 @@
 import Node from "./Node";
 import Line from "./Line";
 import LoopLine from "./LoopLine";
-import { randomColor } from "./Utility";
+import { getAngleBetweenPoints, randomColor } from "./Utility";
 
 class FSMDesigner {
   constructor({ canvas }) {
@@ -62,8 +62,6 @@ class FSMDesigner {
     }
   }
   handleMouseDown(event) {
-    // need to check is node clicked
-
     const { offsetX: x, offsetY: y } = event;
     const object = this.getObjectByCoordinate({ x, y });
 
@@ -74,14 +72,9 @@ class FSMDesigner {
     object.isSelected = true;
 
     if (event.shiftKey && object.constructor.name === "Node") {
-      // this.placeholderLine = this.createLoopLine({
-      //   node: object,
-      //   cursorCoordinate: { x, y },
-      // });
-      this.placeholderLine = this.createLine({
-        sourceNode: object,
-        targetNode: { x, y },
-        isPlaceholderLine: true,
+      this.placeholderLine = this.createLoopLine({
+        node: object,
+        cursorCoordinate: { x, y },
       });
       return;
     }
@@ -94,7 +87,33 @@ class FSMDesigner {
     const { offsetX: x, offsetY: y } = event;
 
     if (this.placeholderLine) {
-      this.placeholderLine.targetNode = { x, y };
+      const object = this.getObjectByCoordinate({ x, y });
+
+      if (
+        object &&
+        object.constructor.name === "Node" &&
+        object === this.selectedObject
+      ) {
+        if (this.placeholderLine.constructor.name === "LoopLine") {
+          const angle = getAngleBetweenPoints(this.selectedObject, { x, y });
+          this.placeholderLine.angle = angle;
+        } else {
+          this.placeholderLine = this.createLoopLine({
+            node: object,
+            cursorCoordinate: { x, y },
+          });
+        }
+      } else {
+        if (this.placeholderLine.constructor.name === "Line") {
+          this.placeholderLine.targetNode = { x, y };
+        } else {
+          this.placeholderLine = this.createLine({
+            sourceNode: this.selectedObject,
+            targetNode: { x, y },
+            isPlaceholderLine: true,
+          });
+        }
+      }
       return;
     }
 
@@ -110,19 +129,23 @@ class FSMDesigner {
     const { offsetX: x, offsetY: y } = event;
 
     // need to check if target in node
+    const object = this.getObjectByCoordinate({ x, y });
     if (this.placeholderLine) {
-      const object = this.getObjectByCoordinate({ x, y });
-      if (
-        object &&
-        object.constructor.name === "Node" &&
-        object !== this.selectedObject
-      ) {
-        const line = this.createLine({
-          sourceNode: this.placeholderLine.sourceNode,
-          targetNode: object,
-          lineOffset: object.radius,
-        });
-        this.objects[line.hitColor] = line;
+      if (object && object.constructor.name === "Node") {
+        let line;
+        if (object === this.selectedObject) {
+          line = this.createLoopLine({
+            node: object,
+            cursorCoordinate: { x, y },
+          });
+        } else {
+          line = this.createLine({
+            sourceNode: this.placeholderLine.sourceNode,
+            targetNode: object,
+            lineOffset: object.radius,
+          });
+        }
+        this.objects[this.hitDetectionColor] = line;
       }
       this.placeholderLine = null;
     }
@@ -167,14 +190,9 @@ class FSMDesigner {
   }
   createNode({ x, y }) {
     const color = this.hitDetectionColor;
+    const { ctx, hitCanvasCtx } = this;
+    const node = new Node({ x, y, ctx, hitCtx: hitCanvasCtx, hitColor: color });
 
-    const node = new Node({
-      x,
-      y,
-      ctx: this.ctx,
-      hitCtx: this.hitCanvasCtx,
-      hitColor: color,
-    });
     return node;
   }
   createLine({
@@ -197,20 +215,15 @@ class FSMDesigner {
     return line;
   }
   createLoopLine({ node, cursorCoordinate }) {
-    const delta = {
-      x: cursorCoordinate.x - node.x,
-      y: cursorCoordinate.y - node.y,
-    };
-    console.log(cursorCoordinate, node.x, node.y);
-    const angle = Math.atan2(delta.y, delta.x);
+    const angle = getAngleBetweenPoints(node, cursorCoordinate);
 
     const color = this.hitDetectionColor;
     const loopLine = new LoopLine({
       angle,
+      node,
       ctx: this.ctx,
       hitCtx: this.hitCanvasCtx,
       hitColor: color,
-      node: node,
     });
 
     return loopLine;

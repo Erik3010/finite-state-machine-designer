@@ -21,3 +21,7 @@ export const measureText = (
 
   return props;
 };
+
+export const radianToDegree = (radian) => radian * (180 / Math.PI);
+
+export const getAngleBetweenPoints = (a, b) => Math.atan2(b.y - a.y, b.x - a.x);
