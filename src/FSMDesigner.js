@@ -117,13 +117,16 @@ class FSMDesigner {
       return;
     }
 
-    if (
-      !this.draggedObject ||
-      !(this.draggedObject.constructor.name === "Node")
-    )
+    if (!this.draggedObject || this.draggedObject.constructor.name === "Line")
       return;
 
-    this.draggedObject.movePosition({ x, y });
+    if (this.draggedObject.constructor.name === "Node") {
+      this.draggedObject.movePosition({ x, y });
+    } else if (this.draggedObject.constructor.name === "LoopLine") {
+      const { node } = this.selectedObject;
+      const angle = getAngleBetweenPoints({ x: node.x, y: node.y }, { x, y });
+      this.draggedObject.angle = angle;
+    }
   }
   handleMouseUp(event) {
     const { offsetX: x, offsetY: y } = event;
@@ -145,7 +148,7 @@ class FSMDesigner {
             lineOffset: object.radius,
           });
         }
-        this.objects[this.hitDetectionColor] = line;
+        this.objects[line.hitColor] = line;
       }
       this.placeholderLine = null;
     }

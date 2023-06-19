@@ -119,7 +119,7 @@ class Line {
     ctx.beginPath();
     ctx.moveTo(start.x, start.y);
     ctx.lineTo(end.x, end.y);
-    if (isDrawHit) ctx.lineWidth = 15;
+    isDrawHit && (ctx.lineWidth = 15);
     ctx.strokeStyle = isDrawHit
       ? this.hitColor
       : this.isSelected

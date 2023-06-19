@@ -13,8 +13,11 @@ class LoopLine {
     this.arrowHeadLength = 12;
 
     this.radius = 25;
+
+    this.isSelected = false;
   }
-  drawArrow() {
+  drawArrow(isDrawHit = false) {
+    const ctx = isDrawHit ? this.hitCtx : this.ctx;
     const endAngle = this.angle + Math.PI * 0.15;
 
     const start = {
@@ -33,34 +36,52 @@ class LoopLine {
 
     const delta = { x: end.x - start.x, y: end.y - start.y };
 
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.moveTo(start.x + 0.5 * delta.y, start.y - 0.5 * delta.x);
-    this.ctx.lineTo(start.x - 0.5 * delta.y, start.y + 0.5 * delta.x);
-    this.ctx.lineTo(end.x, end.y);
-    this.ctx.closePath();
-    this.ctx.fillStyle = "#000000";
-    this.ctx.fill();
-    this.ctx.restore();
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(start.x + 0.5 * delta.y, start.y - 0.5 * delta.x);
+    ctx.lineTo(start.x - 0.5 * delta.y, start.y + 0.5 * delta.x);
+    ctx.lineTo(end.x, end.y);
+    ctx.closePath();
+    ctx.fillStyle = isDrawHit
+      ? this.hitColor
+      : this.isSelected
+      ? "#ff0000"
+      : "#000";
+    ctx.fill();
+    ctx.restore();
   }
-  drawLoopLine() {
+  /**
+   * Drawing the loop line
+   * Highly inspired from: https://github.com/evanw/fsm
+   */
+  drawLoopLine(isDrawHit = false) {
+    const ctx = isDrawHit ? this.hitCtx : this.ctx;
+
     const x = Math.cos(this.angle) * (this.node.radius + this.radius / 2);
     const y = Math.sin(this.angle) * (this.node.radius + this.radius / 2);
 
-    this.ctx.beginPath();
-    this.ctx.arc(
+    ctx.beginPath();
+    ctx.arc(
       this.node.x + x,
       this.node.y + y,
       this.radius,
       this.angle - Math.PI * 0.75,
       this.angle + Math.PI * 0.75
     );
-    this.ctx.stroke();
-    this.ctx.closePath();
+    isDrawHit && (ctx.lineWidth = 10);
+    ctx.strokeStyle = isDrawHit
+      ? this.hitColor
+      : this.isSelected
+      ? "#ff0000"
+      : "#000";
+    ctx.stroke();
+    ctx.closePath();
+
+    this.drawArrow(isDrawHit);
   }
   draw() {
     this.drawLoopLine();
-    this.drawArrow();
+    this.drawLoopLine(true);
   }
 }
 
