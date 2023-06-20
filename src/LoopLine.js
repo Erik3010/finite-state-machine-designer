@@ -1,8 +1,8 @@
-import { radianToDegree } from "./Utility";
+import { radianToDegree, measureText } from "./Utility";
 import Text from "./Text";
 
 class LoopLine {
-  constructor({ ctx, hitCtx, hitColor, node, angle }) {
+  constructor({ ctx, hitCtx, hitColor, isPlaceholderLine, node, angle }) {
     this.ctx = ctx;
 
     this.hitCtx = hitCtx;
@@ -17,19 +17,24 @@ class LoopLine {
 
     this.isSelected = false;
 
-    this.initialText = "test";
+    this.initialText = "";
+    this.isPlaceholderLine = isPlaceholderLine;
 
     const { x, y } = this.textPosition;
-    this.text = new Text({ x, y, ctx: this.ctx, text: this.initialText });
+    this.text = new Text({
+      x,
+      y,
+      angle: this.angle,
+      ctx: this.ctx,
+      text: this.initialText,
+    });
   }
   get textPosition() {
-    const x = Math.cos(this.angle) * (this.node.radius + this.radius / 2 + 40);
-    const y = Math.sin(this.angle) * (this.node.radius + this.radius / 2 + 40);
+    const radius = this.node.radius + this.radius / 2 + this.radius;
+    const x = Math.cos(this.angle) * radius;
+    const y = Math.sin(this.angle) * radius;
 
-    return {
-      x: this.node.x + x,
-      y: this.node.y + y,
-    };
+    return { x: this.node.x + x, y: this.node.y + y };
   }
   drawArrow(isDrawHit = false) {
     const ctx = isDrawHit ? this.hitCtx : this.ctx;
@@ -103,15 +108,7 @@ class LoopLine {
     this.text.draw();
 
     this.text.isCaretActive = this.isSelected;
-    const { x, y } = this.textPosition;
-    this.text.x = x;
-    this.text.y = y;
-
-    // this.ctx.save();
-    // this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
-    // this.ctx.fillStyle = "#ff0000";
-    // this.ctx.fill();
-    // this.ctx.restore();
+    this.text.updatePostition({ ...this.textPosition, angle: this.angle });
   }
 }
 

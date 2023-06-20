@@ -44,7 +44,6 @@ class FSMDesigner {
   handleKeyDown(event) {
     const { keyCode } = event;
 
-    // if (!this.selectedObject || this.selectedObject.constructor.name !== "Node")
     if (!this.selectedObject) return;
 
     const { text } = this.selectedObject.text;
@@ -75,6 +74,7 @@ class FSMDesigner {
       this.placeholderLine = this.createLoopLine({
         node: object,
         cursorCoordinate: { x, y },
+        isPlaceholderLine: true,
       });
       return;
     }
@@ -101,6 +101,7 @@ class FSMDesigner {
           this.placeholderLine = this.createLoopLine({
             node: object,
             cursorCoordinate: { x, y },
+            isPlaceholderLine: true,
           });
         }
       } else {
@@ -140,6 +141,7 @@ class FSMDesigner {
           line = this.createLoopLine({
             node: object,
             cursorCoordinate: { x, y },
+            isPlaceholderLine: false,
           });
         } else {
           line = this.createLine({
@@ -217,13 +219,14 @@ class FSMDesigner {
     });
     return line;
   }
-  createLoopLine({ node, cursorCoordinate }) {
+  createLoopLine({ node, cursorCoordinate, isPlaceholderLine }) {
     const angle = getAngleBetweenPoints(node, cursorCoordinate);
 
     const color = this.hitDetectionColor;
     const loopLine = new LoopLine({
       angle,
       node,
+      isPlaceholderLine,
       ctx: this.ctx,
       hitCtx: this.hitCanvasCtx,
       hitColor: color,

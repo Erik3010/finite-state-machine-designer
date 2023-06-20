@@ -19,8 +19,6 @@ class Line {
     this.hitCtx = hitCtx;
     this.hitColor = hitColor;
 
-    // normal line or loop line
-    this.type = "line";
     this.isPlaceholderLine = isPlaceholderLine;
 
     this.arrowHeadLength = 15;
@@ -29,8 +27,14 @@ class Line {
 
     this.initialText = "";
 
-    const { x, y } = this.textPosition;
-    this.text = new Text({ x, y, ctx: this.ctx, text: this.initialText });
+    const { x, y, angle } = this.textPosition;
+    this.text = new Text({
+      x,
+      y,
+      angle,
+      ctx: this.ctx,
+      text: this.initialText,
+    });
   }
   get delta() {
     return {
@@ -48,27 +52,12 @@ class Line {
       x: this.targetNode.x - Math.cos(this.angle) * this.lineOffset,
       y: this.targetNode.y - Math.sin(this.angle) * this.lineOffset,
     };
-
-    /**
-     * Make text position in the middle of line but didn't overlap with the line itself
-     * Highly inspired from https://github.com/evanw/fsm
-     */
-    const { width } = measureText(this.ctx, {
-      text: this.text?.text ?? this.initialText,
-    });
     const angle = Math.atan2(end.x - start.x, start.y - end.y);
 
-    const cos = Math.cos(angle + Math.PI);
-    const sin = Math.sin(angle + Math.PI);
-    const cornerPointX = (width / 2 + 5) * Math.sign(cos);
-    const cornerPointY = 15 * Math.sign(sin);
-    const slide =
-      sin * Math.pow(Math.abs(sin), 40) * cornerPointX -
-      cos * Math.pow(Math.abs(cos), 10) * cornerPointY;
-
     return {
-      x: (start.x + end.x) / 2 + (cornerPointX - sin * slide),
-      y: (start.y + end.y) / 2 + (cornerPointY + cos * slide),
+      angle: angle + Math.PI,
+      x: (start.x + end.x) / 2,
+      y: (start.y + end.y) / 2,
     };
   }
   get angle() {
@@ -135,11 +124,9 @@ class Line {
     this.drawLine();
     this.drawLine(true);
 
-    const { x, y } = this.textPosition;
-
     this.text.draw();
-    this.text.x = x;
-    this.text.y = y;
+    this.text.updatePostition(this.textPosition);
+
     this.text.isCaretActive = this.isSelected;
   }
 }
