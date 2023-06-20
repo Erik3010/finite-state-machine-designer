@@ -12,12 +12,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   background: #262626;
   color: #fff;
 }
 
+a {
+  color: #fff;
+}
+
 #app {
-  padding: 3rem 0;
+  padding: 3rem 0 0;
+  width: 800px;
 }
 
 .header {
@@ -28,7 +34,7 @@ body {
 }
 
 .title p {
-  opacity: 0.75;
+  color: #c8c8c8;
   margin: 0.25rem 0;
 }
 
@@ -46,6 +52,21 @@ body {
 
 .btn-primary:hover {
   background: #e1d7d5;
+}
+
+main .description {
+  margin: 1rem 0 1.5rem;
+  line-height: 1.65;
+  color: #d1d1d1;
+}
+
+footer {
+  border-top: 1px solid #535353;
+  padding: 1rem 0;
+  width: 100%;
+  font-size: 0.875rem;
+  color: #c8c8c8;
+  text-align: center;
 }
 
 #canvas {
