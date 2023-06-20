@@ -5,12 +5,19 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite App</title>
+  <title>Finite State Machine Designer</title>
 </head>
 
 <body>
   <div id="app">
-    <canvas id="canvas" width="800" height="600"></canvas>
+    <header class="header">
+      <div class="title">
+        <h1>Finite State Machine Designer</h1>
+        <p>An app that is used to design a Finite State Machine.</p>
+      </div>
+      <button class="btn btn-primary">Export to PNG</button>
+    </header>
+    <canvas id="canvas" width="800" height="500"></canvas>
   </div>
   <script type="module" src="/src/main.js"></script>
 </body>

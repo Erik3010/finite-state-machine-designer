@@ -12,8 +12,42 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #262626;
+  color: #fff;
+}
+
+#app {
+  padding: 3rem 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title p {
+  opacity: 0.75;
+  margin: 0.25rem 0;
+}
+
+.btn {
+  cursor: pointer;
+  border-radius: 0.35rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: #f5ecea;
+  border: 1px solid #f5ecea;
+}
+
+.btn-primary:hover {
+  background: #e1d7d5;
 }
 
 #canvas {
-  border: 1px solid #000;
+  border-radius: 0.5rem;
 }
