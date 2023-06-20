@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/finite-state-machine-designer/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finite State Machine Designer</title>
+  <script type="module" crossorigin src="/finite-state-machine-designer/assets/index-575e494f.js"></script>
+  <link rel="stylesheet" href="/finite-state-machine-designer/assets/index-cde37afa.css">
+</head>
+
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="title">
+        <h1>Finite State Machine Designer</h1>
+        <p>An app that is used to design a Finite State Machine.</p>
+      </div>
+      <button class="btn btn-primary" id="btn-export">Export to PNG</button>
+    </header>
+
+    <main>
+      <canvas id="canvas" width="800" height="500"></canvas>
+      <article class="description">
+        <p>Some shortcut that you need to know to use this application:</p>
+        <ul class="shortcut-list">
+          <li>
+            <span class="badge">Click</span> to select state or arrow
+          </li>
+          <li>
+            <span class="badge">Double Click</span> to create State
+          </li>
+          <li>
+            <span class="badge">Drag</span> to move the state position
+          </li>
+          <li>
+            <span class="badge">Shift + Drag</span> to add a arrow from current state to another state
+          </li>
+          <li>
+            <span class="badge">Delete</span> to delete state or arrow
+          </li>
+        </ul>
+      </article>
+    </main>
+
+  </div>
+  <footer>
+    Made with love by <a href="https://github.com/Erik3010" target="_blank">Erik</a>.
+    The source code is available in <a href="https://github.com/Erik3010/finite-state-machine-designer">here</a>
+  </footer>
+  
+</body>
+
+</html>
