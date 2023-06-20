@@ -221,6 +221,16 @@ class FSMDesigner {
     }
     delete this.objects[this.selectedObject.hitColor];
   }
+  exportToPNG() {
+    const url = this.canvas.toDataURL("image/png");
+
+    const link = document.createElement("a");
+    link.download = "design.png";
+    link.href = url;
+
+    link.click();
+    link.remove();
+  }
   createNode({ x, y }) {
     const color = this.hitDetectionColor;
     const { ctx, hitCanvasCtx } = this;
