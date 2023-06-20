@@ -167,6 +167,11 @@ class FSMDesigner {
     this.objects[node.hitColor] = node;
   }
   draw() {
+    this.ctx.save();
+    this.ctx.fillStyle = "#ffffff";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.restore();
+
     if (this.placeholderLine) {
       this.placeholderLine.draw();
     }
