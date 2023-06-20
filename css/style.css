@@ -60,6 +60,22 @@ main .description {
   color: #d1d1d1;
 }
 
+.shortcut-list {
+  list-style-position: inside;
+}
+
+.shortcut-list li + li {
+  margin-top: 0.15rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  background: red;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.35rem;
+  background: #353333;
+}
+
 footer {
   border-top: 1px solid #535353;
   padding: 1rem 0;
