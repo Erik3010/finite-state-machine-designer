@@ -72,7 +72,7 @@ class FSMDesigner {
     this.isMouseDown = true;
     object.isSelected = true;
 
-    if (event.shiftKey && object.constructor.name === "Node") {
+    if (event.shiftKey && object.type === "node") {
       this.placeholderLine = this.createLoopLine({
         node: object,
         cursorCoordinate: { x, y },
@@ -91,12 +91,8 @@ class FSMDesigner {
     if (this.placeholderLine) {
       const object = this.getObjectByCoordinate({ x, y });
 
-      if (
-        object &&
-        object.constructor.name === "Node" &&
-        object === this.selectedObject
-      ) {
-        if (this.placeholderLine.constructor.name === "LoopLine") {
+      if (object && object.type === "node" && object === this.selectedObject) {
+        if (this.placeholderLine.type === "loopLine") {
           const angle = getAngleBetweenPoints(this.selectedObject, { x, y });
           this.placeholderLine.angle = angle;
         } else {
@@ -107,7 +103,7 @@ class FSMDesigner {
           });
         }
       } else {
-        if (this.placeholderLine.constructor.name === "Line") {
+        if (this.placeholderLine.type === "line") {
           this.placeholderLine.targetNode = { x, y };
         } else {
           this.placeholderLine = this.createLine({
@@ -120,12 +116,11 @@ class FSMDesigner {
       return;
     }
 
-    if (!this.draggedObject || this.draggedObject.constructor.name === "Line")
-      return;
+    if (!this.draggedObject || this.draggedObject.type === "line") return;
 
-    if (this.draggedObject.constructor.name === "Node") {
+    if (this.draggedObject.type === "node") {
       this.draggedObject.movePosition({ x, y });
-    } else if (this.draggedObject.constructor.name === "LoopLine") {
+    } else if (this.draggedObject.type === "loopLine") {
       const { node } = this.selectedObject;
       const angle = getAngleBetweenPoints({ x: node.x, y: node.y }, { x, y });
       this.draggedObject.angle = angle;
@@ -137,7 +132,7 @@ class FSMDesigner {
     // need to check if target in node
     const object = this.getObjectByCoordinate({ x, y });
     if (this.placeholderLine) {
-      if (object && object.constructor.name === "Node") {
+      if (object && object.type === "node") {
         let line;
         if (object === this.selectedObject) {
           line = this.createLoopLine({
@@ -201,11 +196,11 @@ class FSMDesigner {
     return this.objects[color];
   }
   deleteObject() {
-    if (this.selectedObject.constructor.name === "Node") {
+    if (this.selectedObject.type === "node") {
       const lines = Object.entries(this.objects)
         .filter(
           ([key, obj]) =>
-            obj.constructor.name === "Line" &&
+            obj.type === "line" &&
             (obj.sourceNode === this.selectedObject ||
               obj.targetNode === this.selectedObject)
         )
@@ -214,8 +209,7 @@ class FSMDesigner {
       const loopLines = Object.entries(this.objects)
         .filter(
           ([key, obj]) =>
-            obj.constructor.name === "LoopLine" &&
-            obj.node === this.selectedObject
+            obj.type === "loopLine" && obj.node === this.selectedObject
         )
         .forEach(([key]) => delete this.objects[key]);
     }

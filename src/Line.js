@@ -1,7 +1,8 @@
 import Text from "./Text";
+import Object from "./Object";
 import { measureText } from "./Utility";
 
-class Line {
+class Line extends Object {
   constructor({
     ctx,
     hitCtx,
@@ -11,13 +12,10 @@ class Line {
     isPlaceholderLine = false,
     lineOffset = null,
   }) {
-    this.ctx = ctx;
+    super({ ctx, hitCtx, hitColor, type: "line" });
 
     this.sourceNode = sourceNode;
     this.targetNode = targetNode;
-
-    this.hitCtx = hitCtx;
-    this.hitColor = hitColor;
 
     this.isPlaceholderLine = isPlaceholderLine;
 

@@ -1,11 +1,9 @@
 import Text from "./Text";
+import Object from "./Object";
 
-class Node {
+class Node extends Object {
   constructor({ ctx, hitCtx, hitColor, x, y }) {
-    this.ctx = ctx;
-    this.hitCtx = hitCtx;
-
-    this.hitColor = hitColor;
+    super({ ctx, hitCtx, hitColor, type: "node" });
 
     this.x = x;
     this.y = y;

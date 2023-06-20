@@ -1,12 +1,10 @@
 import { radianToDegree, measureText } from "./Utility";
 import Text from "./Text";
+import Object from "./Object";
 
-class LoopLine {
+class LoopLine extends Object {
   constructor({ ctx, hitCtx, hitColor, isPlaceholderLine, node, angle }) {
-    this.ctx = ctx;
-
-    this.hitCtx = hitCtx;
-    this.hitColor = hitColor;
+    super({ ctx, hitCtx, hitColor, type: "loopLine" });
 
     this.angle = angle;
     this.node = node;
