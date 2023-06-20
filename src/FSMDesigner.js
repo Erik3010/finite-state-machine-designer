@@ -58,6 +58,8 @@ class FSMDesigner {
       this.selectedObject.text.setText(`${text}${event.key}`);
     } else if (event.key === "Backspace") {
       this.selectedObject.text.setText(text.substring(0, text.length - 1));
+    } else if (event.key === "Delete") {
+      this.deleteObject();
     }
   }
   handleMouseDown(event) {
@@ -197,6 +199,27 @@ class FSMDesigner {
     const color = `rgb(${r}, ${g}, ${b})`;
 
     return this.objects[color];
+  }
+  deleteObject() {
+    if (this.selectedObject.constructor.name === "Node") {
+      const lines = Object.entries(this.objects)
+        .filter(
+          ([key, obj]) =>
+            obj.constructor.name === "Line" &&
+            (obj.sourceNode === this.selectedObject ||
+              obj.targetNode === this.selectedObject)
+        )
+        .forEach(([key]) => delete this.objects[key]);
+
+      const loopLines = Object.entries(this.objects)
+        .filter(
+          ([key, obj]) =>
+            obj.constructor.name === "LoopLine" &&
+            obj.node === this.selectedObject
+        )
+        .forEach(([key]) => delete this.objects[key]);
+    }
+    delete this.objects[this.selectedObject.hitColor];
   }
   createNode({ x, y }) {
     const color = this.hitDetectionColor;
