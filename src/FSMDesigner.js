@@ -158,7 +158,10 @@ class FSMDesigner {
   handleDoubleClick(event) {
     const { offsetX: x, offsetY: y } = event;
     const object = this.getObjectByCoordinate({ x, y });
-    if (object) return;
+    if (object) {
+      object.isAcceptState = true;
+      return;
+    }
 
     const node = this.createNode({ x, y });
     this.objects[node.hitColor] = node;

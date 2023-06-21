@@ -8,6 +8,7 @@ class Node extends Object {
     this.x = x;
     this.y = y;
     this.isSelected = false;
+    this.isAcceptState = false;
 
     this.text = new Text({
       ctx: this.ctx,
@@ -35,6 +36,16 @@ class Node extends Object {
     }
     ctx.closePath();
     ctx.restore();
+
+    if (this.isAcceptState && !isDrawHit) {
+      this.ctx.save();
+      this.ctx.beginPath();
+      this.ctx.arc(this.x, this.y, this.radius - 6, 0, 2 * Math.PI);
+      this.ctx.strokeStyle = this.isSelected ? "#ff0000" : "#000000";
+      this.ctx.stroke();
+      this.ctx.closePath();
+      this.ctx.restore();
+    }
   }
   movePosition(newPosition) {
     const { x, y } = {
