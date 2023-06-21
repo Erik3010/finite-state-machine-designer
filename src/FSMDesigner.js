@@ -47,6 +47,7 @@ class FSMDesigner {
     if (!this.selectedObject) return;
 
     const { text } = this.selectedObject.text;
+    event.preventDefault();
 
     // is alphabet
     if (
@@ -159,7 +160,7 @@ class FSMDesigner {
     const { offsetX: x, offsetY: y } = event;
     const object = this.getObjectByCoordinate({ x, y });
     if (object) {
-      object.isAcceptState = true;
+      object.isAcceptState = !object.isAcceptState;
       return;
     }
 
