@@ -64,6 +64,8 @@ class FSMDesigner {
     }
   }
   handleMouseDown(event) {
+    event.preventDefault();
+
     const { offsetX: x, offsetY: y } = event;
     const object = this.getObjectByCoordinate({ x, y });
 
