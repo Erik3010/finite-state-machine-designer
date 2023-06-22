@@ -49,7 +49,7 @@ class FSMDesigner {
     const { text } = this.selectedObject.text;
     event.preventDefault();
 
-    // is alphabet
+    // is alphanumeric
     if (
       (keyCode > 64 && keyCode < 91) ||
       (keyCode > 96 && keyCode < 123) ||
@@ -69,7 +69,9 @@ class FSMDesigner {
     const { offsetX: x, offsetY: y } = event;
     const object = this.getObjectByCoordinate({ x, y });
 
-    this.selectedObject && (this.selectedObject.isSelected = false);
+    if(this.selectedObject) 
+      this.selectedObject.isSelected = false;
+      
     if (!object) return;
 
     this.isMouseDown = true;
