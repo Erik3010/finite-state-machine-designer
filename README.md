@@ -21,6 +21,7 @@ I created this project to enhance my javascript canvas and gain some experience 
 
 - [ ] Save the design to the local storage
 - [ ] Load the design from the local storage
+- [ ] Create arrow from any space in canvas
 
 ## Credit
 
