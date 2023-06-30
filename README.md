@@ -1,5 +1,7 @@
 # Finite State Machine Designer
 
+![Finite State Machine Designer Preview](https://github.com/Erik3010/finite-state-machine-designer/blob/master/preview.png?raw=true)
+
 ## Description
 
 This project is a simple Finite State Designer that allows you to create, edit and visualize finite state machines. It is built using Javascript and HTML Canvas. You can try the live version [here](https://erik3010.github.io/finite-state-machine-designer).
