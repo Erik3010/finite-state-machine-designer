@@ -1,4 +1,3 @@
-import { radianToDegree, measureText } from "./Utility";
 import Text from "./Text";
 import Object from "./Object";
 
