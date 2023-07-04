@@ -30,8 +30,6 @@ class Node extends Object {
       ctx.fill();
     } else {
       ctx.strokeStyle = this.isSelected ? "#ff0000" : "#000000";
-      // ctx.fillStyle = "#fff";
-      // ctx.fill();
       ctx.stroke();
     }
     ctx.closePath();
